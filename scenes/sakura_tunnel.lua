@@ -199,12 +199,22 @@ function M.draw(titleFont, subFont)
         W*0.48, H, W*0.52, H,
         W*0.51, H*0.55, W*0.49, H*0.55,
     })
-    -- 石板 (横纹, 由近到远)
-    for k = 0, 7 do
-        local yk = H - 40 - k * (H*0.06)
-        local wW = 30 + k * 30
+    -- 石板 (横纹, 严格沿透视梯形路面的两条斜边, 近大远小)
+    -- 路面梯形: 顶部 (W*0.45, H*0.55)~(W*0.55, H*0.55)  底边 (0, H)~(W, H)
+    local roadTopY  = H * 0.55
+    local roadBotY  = H - 2
+    local roadTopHL = W * 0.05  -- 顶部半宽 (0.50-0.45)
+    local roadBotHL = W * 0.50  -- 底边半宽
+    local N = 7
+    for k = 0, N do
+        local u = k / N                              -- 0=近, 1=远
+        local tt = 1 - u                              -- 1=近, 0=远
+        -- y 随 tt 线性递减(从 roadBotY 走到 roadTopY), 越远间距越密
+        local yk = roadBotY * tt + roadTopY * u
+        -- 横线半宽与 yk 严格匹配透视梯形斜边
+        local hl = roadBotHL * tt + roadTopHL * u
         love.graphics.setColor(C.stoneDk[1], C.stoneDk[2], C.stoneDk[3], 0.5)
-        love.graphics.line(W*0.5 - wW, yk, W*0.5 + wW, yk)
+        love.graphics.line(W*0.5 - hl, yk, W*0.5 + hl, yk)
     end
 
     -- 5) 樱花树 (近景, 双侧)

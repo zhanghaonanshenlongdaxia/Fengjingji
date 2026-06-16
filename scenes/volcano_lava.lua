@@ -22,30 +22,38 @@ local C = {
     spark    = {1.00, 0.85, 0.40},
 }
 
--- 火山锥
+-- 火山锥 (平顶火山口)
 local function drawVolcano(cx, baseY, w, h, c)
+    local topY    = baseY - h              -- 平顶高度
+    local topHL   = w * 0.22               -- 平顶半宽 (火山口宽度)
+    -- 山体 (梯形+缓丘, 5 点: 底左→底右→肩右→顶右→顶左→肩左)
     love.graphics.setColor(c[1], c[2], c[3], 1)
     love.graphics.polygon("fill", {
         cx - w*0.5, baseY, cx + w*0.5, baseY,
-        cx + w*0.10, baseY - h*0.85,
-        cx,           baseY - h,
-        cx - w*0.10, baseY - h*0.85,
+        cx + w*0.20, baseY - h*0.7,
+        cx + topHL,  topY,
+        cx - topHL,  topY,
+        cx - w*0.20, baseY - h*0.7,
     })
-    -- 暗面 (右)
+    -- 暗面 (右半, 同样平顶)
     love.graphics.setColor(c[1]*0.5, c[2]*0.5, c[3]*0.5, 1)
     love.graphics.polygon("fill", {
         cx, baseY, cx + w*0.5, baseY,
-        cx + w*0.10, baseY - h*0.85,
-        cx,           baseY - h,
+        cx + w*0.20, baseY - h*0.7,
+        cx + topHL,  topY,
+        cx,           topY,
     })
     -- 火山口 (椭圆开口, 暗红)
     love.graphics.setColor(0.02, 0.01, 0.01, 1)
-    love.graphics.ellipse("fill", cx, baseY - h, w*0.13, 8)
+    love.graphics.ellipse("fill", cx, topY, topHL, 14)
     -- 熔岩顶
     love.graphics.setColor(C.lavaMid[1], C.lavaMid[2], C.lavaMid[3], 1)
-    love.graphics.ellipse("fill", cx, baseY - h, w*0.11, 5)
+    love.graphics.ellipse("fill", cx, topY - 1, topHL * 0.85, 9)
     love.graphics.setColor(C.lavaHot[1], C.lavaHot[2], C.lavaHot[3], 0.9)
-    love.graphics.ellipse("fill", cx, baseY - h - 1, w*0.07, 3)
+    love.graphics.ellipse("fill", cx, topY - 2, topHL * 0.55, 5)
+    -- 边缘裂缝 (亮橙)
+    love.graphics.setColor(C.lavaHot[1], C.lavaHot[2], C.lavaHot[3], 0.6)
+    love.graphics.line(cx - topHL*0.9, topY, cx + topHL*0.9, topY)
 end
 
 -- 熔岩流 (多边形 + 内部亮带)
