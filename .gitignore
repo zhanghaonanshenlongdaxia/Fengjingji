@@ -1,0 +1,20 @@
+# LÖVE 缓存 / 保存
+*.love
+.luarc.json
+.idea/
+.vscode/
+.DS_Store
+*.log
+
+# 截图临时输出
+verify_out/
+verify_out_20/
+*.snap.png
+_snap_*.png
+_snap_*.jpg
+
+# 临时日志
+_love_log*.txt
+_love_err*.txt
+_snap_log*.txt
+_v2*.log
